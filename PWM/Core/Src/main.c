@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdint.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -91,6 +91,16 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
+	// PWM Timer initialisieren
+	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+
+	// Wert für das PWM Signal
+	uint8_t u1_wert = 100;
+
+	// Hoch-runter-zähler
+	int8_t i2_add = 1;
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -100,6 +110,23 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+	// i2 add einstellen
+	if (u1_wert > 198) {
+		i2_add = -1;
+	}
+	if (u1_wert < 1) {
+		i2_add = 1;
+	}
+
+	// Wert verändern
+	u1_wert = u1_wert + i2_add;
+
+	// Wert für das PWM Signal setzen (?"Wechsel von High auf Low"?)
+	TIM2->CCR1 = u1_wert;
+
+	// Verzögerung
+	HAL_Delay(300);
   }
   /* USER CODE END 3 */
 }
@@ -164,7 +191,7 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 1600;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 65535;
+  htim2.Init.Period = 199;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
