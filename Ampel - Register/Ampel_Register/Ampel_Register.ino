@@ -22,9 +22,9 @@ int main(void){
 
 void mySetup() {
 // Pins 2, 3 und 4 als Outputs
-  DDRD |= (1 << DDB2);
-  DDRD |= (1 << DDB3);
-  DDRD |= (1 << DDB4);
+  DDRD |= (1 << DDD2);
+  DDRD |= (1 << DDD3);
+  DDRD |= (1 << DDD4);
 }
 
 void myLoop() {
@@ -44,6 +44,7 @@ void myLoop() {
   yellow();
   red();
   _delay_ms(1000);
+  
 }
 
 // Funktionen der Ampelphasen

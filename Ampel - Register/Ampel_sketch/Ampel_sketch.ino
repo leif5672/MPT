@@ -1,6 +1,10 @@
- void setup() {
+#define PINLEDGREEN 2
+#define PINLEDYELLOW 3
+#define PINLEDRED 4
+
+void setup() {
   // Pins 2, 3 und 4 als Outputs
-  for (int i = 2; i < 5; i++){
+  for (int i = 2; i < 5; i++) {
     pinMode(i, OUTPUT);
   }
 }
@@ -11,9 +15,9 @@ void yellow(void);
 void clear(void);
 
 void loop() {
-  clear(); // Alle Pins auf Low
-  green(); // Grün an
-  delay(5000); // Warten
+  clear();      // Alle Pins auf Low
+  green();      // Grün an
+  delay(5000);  // Warten
 
   clear();
   yellow();
@@ -30,19 +34,19 @@ void loop() {
 }
 
 // Funktionen der Ampelphasen
-void green(void){
-  digitalWrite(2, HIGH);
+void green(void) {
+  digitalWrite(PINLEDGREEN, HIGH);
 }
-void yellow(void){
-  digitalWrite(3, HIGH);
+void yellow(void) {
+  digitalWrite(PINLEDYELLOW, HIGH);
 }
-void red(void){
-  digitalWrite(4, HIGH);
+void red(void) {
+  digitalWrite(PINLEDRED, HIGH);
 }
 
 // Fkt für alle Pins auf Low
-void clear(void){
-    for (int i = 2; i < 5; i++){
+void clear(void) {
+  for (int i = 2; i < 5; i++) {
     digitalWrite(i, LOW);
   }
 }
