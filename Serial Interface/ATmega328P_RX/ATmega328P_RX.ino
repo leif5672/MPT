@@ -1,23 +1,22 @@
-//Comunication between ATMEGA823P & STM32 
+//Comunication between ATMEGA823P (RX) & STM32 (TX)
 #include<stdint.h>
 
 
-//Pin numbers
+// Set Pin Numbers here:
   //OUTPUTS
-    uint8_t LED1 = 7;
-    uint8_t LED2 = 8; 
-    uint8_t LED3 = 9;
-    uint8_t LED4 = 10;
-  
-  
+  #define LED1 7
+  #define LED2 8
+  #define LED3 9
+  #define LED4 10  
   //INPUTS
-    uint8_t CLK_Signal = 2;
-    uint8_t Bit1_Pin = 12;
-  
+  #define CLK_Signal 2
+  #define Bit1_Pin 12
 
-   uint8_t counter = 0;
-   uint8_t value = 0;
-  
+
+// Global Variables
+uint8_t counter = 0;
+uint8_t value = 0;
+
 void setup() {
   
   
