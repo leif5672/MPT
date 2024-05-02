@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdint.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,7 +45,8 @@ TIM_HandleTypeDef htim2;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
-
+volatile uint8_t u1_button = 0;
+uint8_t u1_buff[2];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -94,7 +95,10 @@ int main(void)
   MX_TIM2_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  // Start Timer Interrupt
+  HAL_TIM_Base_Start_IT(&htim2);
+  // Start UART Receive Interrupt
+  HAL_UART_Receive_IT(&huart1, u1_buff, 2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -263,6 +267,50 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+// ISR Timer
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+	// Write button value to variable
+	uint8_t u1_buf = u1_button;
+	// Transmit data every 100 ms to Simulink
+	HAL_UART_Transmit(&huart1, &u1buf, 1, 10);
+}
+
+// ISR button press
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+	// set u1_button to one if pin is active
+	if(HAL_GPIO_ReadPin (GPIOB, GPIO_Pin_7)){
+		u1_button = 1;
+	}
+	else{
+		u1_button = 0;
+	}
+}
+
+// ISR receive data from Simulink
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+	// Write received data in u1_buff
+	HAL_UART_Receive_IT(&huart, u1_buff, 2);
+
+	// Put received values into int16:
+	// set up union for having two variables of different data types using the same space
+	union i2_union {
+		int16_t i2_data;
+		uint8_t u1_data[2];
+	}receiveUnion;
+
+	// Write the received value in the uint8 variables
+	receiveUnion.u1_data[0] = u1_buff[0];
+	receiveUnion.u1_data[1] = u1_buff[1];
+
+	// to read the transmitted value use:
+	// receiveUnion.i2_data
+
+	// Turn On/Off DevCard "myLED"
+	// HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+	// HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+}
+
+
 
 /* USER CODE END 4 */
 
